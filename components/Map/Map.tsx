@@ -1,10 +1,15 @@
-import MapView, { MAP_TYPES } from "react-native-maps";
+import MapView, { MAP_TYPES, Marker } from "react-native-maps";
 import { platform, windowHeight } from "../../constants";
 import { useStateProp } from "../../types/ReactHooksTypes/types";
 import { Camera, mapLocationProps } from "../../types/MapTypes/types";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { handleMapLocation } from "../../store/slices/mapSlice/mapSlice";
+import { Circle } from "phosphor-react-native";
+import { StyleSheet, View } from "react-native";
 
 export const MapContainer = () => {
+  const dispatch = useAppDispatch();
   const [mapLocation, setMapLocation]: useStateProp<mapLocationProps> =
     useState({
       latitude: -32.420329,
@@ -22,6 +27,18 @@ export const MapContainer = () => {
     heading: 0,
     zoom: 17,
   });
+
+  const { enableGetLocation, mapLocation: mapPosition } = useAppSelector(
+    (state) => state.map
+  );
+
+  const handlePositionMap = (event) => {
+    if (enableGetLocation) {
+      const { coordinate } = event.nativeEvent;
+      console.log(coordinate);
+      dispatch(handleMapLocation(coordinate));
+    }
+  };
 
   return (
     <MapView
@@ -41,6 +58,33 @@ export const MapContainer = () => {
         height: platform === "ios" ? windowHeight : "100%",
         zIndex: 9,
       }}
-    ></MapView>
+      onPress={handlePositionMap}
+    >
+      {enableGetLocation &&
+        mapPosition.latitude !== null &&
+        mapPosition.longitude !== null && (
+          <Marker
+            coordinate={{
+              latitude: mapPosition.latitude,
+              longitude: mapPosition.longitude,
+            }}
+          >
+            <View style={styles.marker}>
+              <Circle size={15} color="pink" weight="fill"/>
+            </View>
+          </Marker>
+        )}
+    </MapView>
   );
 };
+
+const styles = StyleSheet.create({
+  marker: {
+    backgroundColor: "#154163",
+    height: 35,
+    width: 35,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center"
+  }
+})

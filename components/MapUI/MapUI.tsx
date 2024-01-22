@@ -10,9 +10,16 @@ export const MapUI = () => {
   const { areMaps } = useLocalSearchParams();
   const [indexCreate, setIndexCreate]: useStateProp<null | string> =
     useState(null);
+  const [mapUIHeight, setMapUIHeight]: useStateProp<number> =
+    useState(windowHeight);
+  
   const handleCreator = (id: number) => {
     setIndexCreate(id);
   };
+
+  const handleMapUIHeight = (height: number) => {
+    setMapUIHeight(height)
+  }
 
   return (
     <View
@@ -20,12 +27,12 @@ export const MapUI = () => {
         styles.containerUI,
         {
           width: areMaps !== "0" ? "20%" : "100%",
-          height: areMaps !== "0" ? 200 : windowHeight,
+          height: mapUIHeight,
         },
       ]}
     >
       {areMaps === "1" && <ButtonsHome handleCreator={handleCreator} />}
-      {areMaps === "0" && <ModalsStepper />}
+      {areMaps === "0" && <ModalsStepper handleMapUIHeight={handleMapUIHeight}/>}
     </View>
   );
 };
@@ -35,6 +42,6 @@ const styles = StyleSheet.create({
     zIndex: 12,
     position: "absolute",
     bottom: 0,
-    // backgroundColor: "green",
+    backgroundColor: "green",
   },
 });
