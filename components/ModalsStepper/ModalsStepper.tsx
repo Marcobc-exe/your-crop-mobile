@@ -3,7 +3,7 @@ import { CustomModalInputs } from "./CustomModalInputs";
 
 export const ModalsStepper = () => {
   const handleEnterMap = (action: string | undefined) => {
-    console.log(action)
+    console.log(action);
   }
 
   return (
