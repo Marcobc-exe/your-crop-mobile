@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type initialStateProps = {
+  mapName: string | null;
   mapLocation: {
     latitude: number | null;
     longitude: number | null
@@ -11,6 +12,7 @@ type initialStateProps = {
 };
 
 const initialState: initialStateProps = {
+  mapName: null,
   mapLocation: {
     latitude: null,
     longitude: null
@@ -30,8 +32,11 @@ export const mapSlice = createSlice({
     handleMapLocation: (state, action) => {
       state.mapLocation = action.payload;
     },
+    handleMapName: (state, action) => {
+      state.mapName = action.payload;
+    }
   },
 });
 
-export const { switchEditionMap, handleMapLocation } = mapSlice.actions;
+export const { switchEditionMap, handleMapLocation, handleMapName } = mapSlice.actions;
 export default mapSlice.reducer;

@@ -3,18 +3,20 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
 type customModalMsg = {
   show: boolean;
+  text: string;
   handleOkStep: () => void;
 }
 
 export const CustomModalMsg: FC<customModalMsg> = ({
   show,
+  text,
   handleOkStep
 }) => {
   return (
     <Modal visible={show} animationType="slide" transparent={true}>
       <View style={styles.containerMainModal}>
         <View style={styles.containerModal}>
-          <Text style={styles.title}>Tap on the map to set the middle point of your map.</Text>
+          <Text style={styles.title}>{text}</Text>
           <View style={styles.containerBtnsActions}>
             <TouchableOpacity
               activeOpacity={0.8}

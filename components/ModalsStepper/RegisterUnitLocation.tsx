@@ -1,54 +1,58 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { handleMapLocation } from "../../store/slices/mapSlice/mapSlice";
+import { handleUnitLocation } from "../../store/slices/unitSlice/unitSlice";
+import { windowWidth } from "../../constants";
 import { FC } from "react";
-import { statusBarHeight, windowHeight, windowWidth } from "../../constants";
 
-type registerMapLocation = {
-  registerMap: () => void;
+type registerUnitLocationProps = {
+  registerUnit: () => void;
 };
 
-export const RegisterMapLocation: FC<registerMapLocation> = ({
-  registerMap,
+export const RegisterUnitLocation: FC<registerUnitLocationProps> = ({
+  registerUnit,
 }) => {
   const dispatch = useAppDispatch();
-  const { mapLocation } = useAppSelector((state) => state.map);
-  const areMapDrawed =
-    mapLocation.latitude !== null && mapLocation.longitude !== null;
+  const { unitLocation } = useAppSelector((state) => state.unit);
+  const areUnitDrawed =
+    unitLocation.latitude !== null && unitLocation.longitude !== null;
 
-  const handleRemoveMapLocation = () => {
-    if (!areMapDrawed) return;
+  const handleRemoveUnitLocation = () => {
+    if (!areUnitDrawed) return;
 
-    dispatch(handleMapLocation({ latitude: null, longitude: null }));
+    dispatch(handleUnitLocation({ latitude: null, longitude: null }));
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        disabled={areMapDrawed ? false : true}
+        disabled={areUnitDrawed ? false : true}
         activeOpacity={0.8}
         style={[
           styles.btnAction,
           {
-            backgroundColor: areMapDrawed ? "#27ae60" : "rgba(39, 174, 96, .5)",
-            borderColor: areMapDrawed ? "#fff" : "rgba(255, 255, 255, .5)",
+            backgroundColor: areUnitDrawed
+              ? "#27ae60"
+              : "rgba(39, 174, 96, .5)",
+            borderColor: areUnitDrawed ? "#fff" : "rgba(255, 255, 255, .5)",
           },
         ]}
-        onPress={registerMap}
+        onPress={registerUnit}
       >
         <Text style={styles.txtBtnAction}>Guardar</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        disabled={!areMapDrawed ? true : false}
+        disabled={!areUnitDrawed ? true : false}
         activeOpacity={0.8}
         style={[
           styles.btnAction,
           {
-            backgroundColor: areMapDrawed ? "#e74c3c" : "rgba(231, 76, 60, .5)",
-            borderColor: areMapDrawed ? "#fff" : "rgba(255, 255, 255, .5)",
+            backgroundColor: areUnitDrawed
+              ? "#e74c3c"
+              : "rgba(231, 76, 60, .5)",
+            borderColor: areUnitDrawed ? "#fff" : "rgba(255, 255, 255, .5)",
           },
         ]}
-        onPress={handleRemoveMapLocation}
+        onPress={handleRemoveUnitLocation}
       >
         <Text style={styles.txtBtnAction}>Borrar</Text>
       </TouchableOpacity>
@@ -64,9 +68,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 14,
-    // backgroundColor: "blue",
     position: "absolute",
-    bottom: 60
+    bottom: 60,
   },
   btnAction: {
     borderWidth: 2,

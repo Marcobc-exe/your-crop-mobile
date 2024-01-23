@@ -3,7 +3,7 @@ import { ButtonsHome } from "../Buttons/ButtonsHome/ButtonsHome";
 import { useState } from "react";
 import { useStateProp } from "../../types/ReactHooksTypes/types";
 import { useLocalSearchParams } from "expo-router";
-import { platform, windowHeight } from "../../constants";
+import { platform, statusBarHeight, windowHeight } from "../../constants";
 import { ModalsStepper } from "../ModalsStepper/ModalsStepper";
 
 export const MapUI = () => {
@@ -27,7 +27,7 @@ export const MapUI = () => {
         styles.containerUI,
         {
           width: areMaps !== "0" ? "20%" : "100%",
-          height: mapUIHeight,
+          height: windowHeight,
         },
       ]}
     >
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
   containerUI: {
     zIndex: 12,
     position: "absolute",
-    bottom: 0,
-    backgroundColor: "green",
+    paddingTop: statusBarHeight,
+    pointerEvents: "box-none",
+    // backgroundColor: "green"
   },
 });

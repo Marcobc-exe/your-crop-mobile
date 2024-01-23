@@ -5,8 +5,9 @@ import { Camera, mapLocationProps } from "../../types/MapTypes/types";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { handleMapLocation } from "../../store/slices/mapSlice/mapSlice";
-import { Circle } from "phosphor-react-native";
+import { Circle, PlusSquare } from "phosphor-react-native";
 import { StyleSheet, View } from "react-native";
+import { handleUnitLocation } from "../../store/slices/unitSlice/unitSlice";
 
 export const MapContainer = () => {
   const dispatch = useAppDispatch();
@@ -31,12 +32,21 @@ export const MapContainer = () => {
   const { enableGetLocation, mapLocation: mapPosition } = useAppSelector(
     (state) => state.map
   );
+  const { enableGetUnitLocation, unitLocation } = useAppSelector(
+    (state) => state.unit
+  );
 
   const handlePositionMap = (event) => {
     if (enableGetLocation) {
       const { coordinate } = event.nativeEvent;
       console.log(coordinate);
       dispatch(handleMapLocation(coordinate));
+    }
+
+    if (enableGetUnitLocation) {
+      const { coordinate } = event.nativeEvent;
+      console.log(coordinate);
+      dispatch(handleUnitLocation(coordinate));
     }
   };
 
@@ -60,6 +70,7 @@ export const MapContainer = () => {
       }}
       onPress={handlePositionMap}
     >
+      {/* POINT MAP POSITION */}
       {enableGetLocation &&
         mapPosition.latitude !== null &&
         mapPosition.longitude !== null && (
@@ -69,8 +80,24 @@ export const MapContainer = () => {
               longitude: mapPosition.longitude,
             }}
           >
-            <View style={styles.marker}>
-              <Circle size={15} color="pink" weight="fill"/>
+            <View style={styles.mapLocation}>
+              <Circle size={15} color="pink" weight="fill" />
+            </View>
+          </Marker>
+        )}
+
+      {/* UNITS POSITIONS */}
+      {enableGetUnitLocation &&
+        unitLocation.latitude !== null &&
+        unitLocation.longitude !== null && (
+          <Marker
+            coordinate={{
+              latitude: unitLocation.latitude,
+              longitude: unitLocation.longitude,
+            }}
+          >
+            <View style={styles.unitLocation}>
+              <PlusSquare size={15} color="pink" weight="fill" />
             </View>
           </Marker>
         )}
@@ -79,12 +106,20 @@ export const MapContainer = () => {
 };
 
 const styles = StyleSheet.create({
-  marker: {
+  mapLocation: {
     backgroundColor: "#154163",
     height: 35,
     width: 35,
     borderRadius: 50,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+  },
+  unitLocation: {
+    backgroundColor: "#154163",
+    height: 35,
+    width: 35,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
   }
-})
+});

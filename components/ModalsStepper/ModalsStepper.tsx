@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { MapModalInput } from "./MapModalInput";
 import { useForm } from "react-hook-form";
 import { FC, useState } from "react";
@@ -6,8 +6,18 @@ import { useStateProp } from "../../types/ReactHooksTypes/types";
 import { CustomModalMsg } from "./CustomModalMsg";
 import { RegisterMapLocation } from "./RegisterMapLocation";
 import { useAppDispatch } from "../../store";
-import { switchEditionMap } from "../../store/slices/mapSlice/mapSlice";
-import { windowHeight } from "../../constants";
+import {
+  handleMapName,
+  switchEditionMap,
+} from "../../store/slices/mapSlice/mapSlice";
+import { statusBarHeight, windowHeight } from "../../constants";
+import { UnitModalInput } from "./UnitModalInput";
+import { HeaderCreationMap } from "../Headers/HeaderCreationMap";
+import {
+  handleUnitProps,
+  switchEditionUnit,
+} from "../../store/slices/unitSlice/unitSlice";
+import { RegisterUnitLocation } from "./RegisterUnitLocation";
 
 type modalsTepperProps = {
   handleMapUIHeight: (height: number) => void;
@@ -16,38 +26,69 @@ type modalsTepperProps = {
 export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
   const dispatch = useAppDispatch();
   const { control, handleSubmit, reset, getValues } = useForm({
-    defaultValues: { inputMapName: "" },
+    defaultValues: { inputMapName: "", inputUnitName: "", inputUnitId: null },
   });
 
   const [showMapModal, setShowMapModal]: useStateProp<boolean> = useState(true);
   const [showOkStep, setShowOkStep]: useStateProp<boolean> = useState(false);
+  const [showOkStepUnit, setShowOkStepUnit]: useStateProp<boolean> =
+    useState(false);
   const [handleMapLocation, setHandleMapLocation]: useStateProp<boolean> =
     useState(false);
+  const [showUnitModal, setShowUnitModal]: useStateProp<boolean> =
+    useState(false);
+  const [handleUnitLocation, setHandleUnitLocation]: useStateProp<boolean> =
+    useState(false);
+  const [showSectorModal, setShowSectorModal]: useStateProp<boolean> =
+    useState(false);
 
+  // * REGISTER MAP
   const handleRegisterMap = () => {
-    const value = getValues().inputMapName;
+    const mapName = getValues().inputMapName;
+
     setShowMapModal(false);
     setShowOkStep(true);
-    console.log(value);
+    dispatch(handleMapName(mapName));
   };
 
   const handleOkStep = () => {
-    console.log("Ok!");
     handleMapUIHeight(80);
     setShowOkStep(false);
     setHandleMapLocation(true);
-    // enable get location on map
     dispatch(switchEditionMap());
   };
 
   const handleRegisterMapLocation = () => {
-    console.log("handleRegisterMap");
-    handleMapUIHeight(windowHeight);
-    setHandleMapLocation(false)
+    handleMapUIHeight(windowHeight - statusBarHeight);
+    setHandleMapLocation(false);
+    setShowUnitModal(true);
+    dispatch(switchEditionMap());
+  };
+
+  // * REGISTER UNIT
+  const handleRegisterUnit = () => {
+    const unitID = getValues().inputUnitId;
+    const unitName = getValues().inputUnitName;
+
+    dispatch(handleUnitProps({ unitID, unitName }));
+    setShowUnitModal(false);
+    setShowOkStepUnit(true);
+  };
+
+  const handleOkStepUnit = () => {
+    setShowOkStepUnit(false);
+    setHandleUnitLocation(true);
+    dispatch(switchEditionUnit());
+  };
+
+  const handleRegisterUniLocation = () => {
+    setHandleUnitLocation(false);
+    setShowSectorModal(true);
   };
 
   return (
-    <View>
+    <>
+      <HeaderCreationMap show={handleMapLocation} />
       <MapModalInput
         show={showMapModal}
         control={control}
@@ -56,13 +97,33 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
         handleRegisterMap={handleRegisterMap}
       />
 
-      <CustomModalMsg show={showOkStep} handleOkStep={handleOkStep} />
+      <CustomModalMsg
+        show={showOkStep}
+        text={"Tap on the map to set the middle point of your map."}
+        handleOkStep={handleOkStep}
+      />
 
       {handleMapLocation && (
-        <RegisterMapLocation
-          handleRegisterMapLocation={handleRegisterMapLocation}
-        />
+        <RegisterMapLocation registerMap={handleRegisterMapLocation} />
       )}
-    </View>
+
+      <UnitModalInput
+        show={showUnitModal}
+        control={control}
+        reset={reset}
+        handleSubmit={handleSubmit}
+        handleRegisterUnit={handleRegisterUnit}
+      />
+
+      <CustomModalMsg
+        show={showOkStepUnit}
+        text={"Tap on the map to set the unit."}
+        handleOkStep={handleOkStepUnit}
+      />
+
+      {handleUnitLocation && (
+        <RegisterUnitLocation registerUnit={handleRegisterUniLocation} />
+      )}
+    </>
   );
 };
