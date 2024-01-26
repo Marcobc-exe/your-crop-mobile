@@ -1,38 +1,40 @@
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ControllerTextInput } from "../TextInputs/ControllerTextInput";
 import { styleInput } from "../../constants/styleInput";
-import { FC } from "react";
 import { control } from "../../types/ReactHookFormTypes";
+import { FC } from "react";
 
-type unitModalInputProps = {
+type sectorModalInputProps = {
   show: boolean;
   control: control;
   reset: () => void;
   handleSubmit: (props: () => void) => void;
-  handleRegisterUnit: () => void;
+  handleRegisterSector: () => void;
+  text?: string;
 };
 
-export const UnitModalInput: FC<unitModalInputProps> = ({
+export const SectorModalInput: FC<sectorModalInputProps> = ({
   show,
   control,
   reset,
   handleSubmit,
-  handleRegisterUnit,
+  handleRegisterSector,
+  text = "",
 }) => {
   return (
     <Modal visible={show} animationType="slide" transparent={true}>
       <View style={styles.containerMainModal}>
         <View style={styles.containerModal}>
-          <Text style={styles.title}>Enter unit details</Text>
+          <Text style={styles.title}>Enter {text} unit details</Text>
 
           <ControllerTextInput
-            name={"inputUnitName"}
+            name={"inputSectorName"}
             control={control}
             rules={{
               required: "Required",
               minLength: {
                 value: 4,
-                message: "Debe tener mínimo 4 caracteres de largo",
+                message: "Should has to be a minimum 4 characters long",
               },
             }}
             styles={styleInput}
@@ -45,19 +47,19 @@ export const UnitModalInput: FC<unitModalInputProps> = ({
               required: "Required",
               minLength: {
                 value: 4,
-                message: "Debe tener mínimo 4 caracteres de largo",
+                message: "Should has to be a minimum 4 characters long",
               },
             }}
             styles={styleInput}
-            placeholder={"Enter unit ID"}
+            placeholder={"Enter Sector ID"}
           />
           <View style={styles.containerBtnsActions}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[styles.btnAction, { backgroundColor: "#27ae60" }]}
-              onPress={handleSubmit(handleRegisterUnit)}
+              onPress={handleSubmit(handleRegisterSector)}
             >
-              <Text style={styles.txtBtnAction}>{"Accept"}</Text>
+              <Text style={styles.txtBtnAction}>{"Add sector"}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

@@ -12,7 +12,7 @@ import { router } from "expo-router";
 
 const Index = () => {
   const listOfMaps = [];
-  console.log(listOfMaps.length ? 1 : 0)
+  // console.log(listOfMaps.length ? 1 : 0)
   return (
     <SafeAreaView style={styles.container}>
       <CustomStatusBar style="light" />

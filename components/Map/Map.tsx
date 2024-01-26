@@ -9,6 +9,11 @@ import { Circle, PlusSquare } from "phosphor-react-native";
 import { StyleSheet, View } from "react-native";
 import { handleUnitLocation } from "../../store/slices/unitSlice/unitSlice";
 
+type polygonCoordsProps = {
+  latitude: number;
+  longitude: number;
+};
+
 export const MapContainer = () => {
   const dispatch = useAppDispatch();
   const [mapLocation, setMapLocation]: useStateProp<mapLocationProps> =
@@ -28,12 +33,20 @@ export const MapContainer = () => {
     heading: 0,
     zoom: 17,
   });
+  const [polygonCoords, setPolygonCoords]: useStateProp<polygonCoordsProps[]> =
+    useState([]);
 
-  const { enableGetLocation, mapLocation: mapPosition } = useAppSelector(
-    (state) => state.map
-  );
+  const {
+    enableGetLocation,
+    mapLocation: mapPosition,
+    listMaps,
+  } = useAppSelector((state) => state.map);
+  console.log(listMaps)
   const { enableGetUnitLocation, unitLocation } = useAppSelector(
     (state) => state.unit
+  );
+  const { enableGetSectorCoordinates } = useAppSelector(
+    (state) => state.sector
   );
 
   const handlePositionMap = (event) => {
@@ -47,6 +60,15 @@ export const MapContainer = () => {
       const { coordinate } = event.nativeEvent;
       console.log(coordinate);
       dispatch(handleUnitLocation(coordinate));
+    }
+
+    if (enableGetSectorCoordinates) {
+      const { coordinate } = event.nativeEvent;
+      console.log(coordinate);
+      setPolygonCoords((prevValue: polygonCoordsProps[]) => [
+        ...prevValue,
+        coordinate,
+      ]);
     }
   };
 
@@ -121,5 +143,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });

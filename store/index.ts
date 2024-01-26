@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import map from "./slices/mapSlice/mapSlice";
 import unit from "./slices/unitSlice/unitSlice";
+import sector from './slices/sectorSlice/sectorSlice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 const store = configureStore({
   reducer: {
     map,
     unit,
+    sector,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

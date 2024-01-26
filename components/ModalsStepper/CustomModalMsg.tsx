@@ -23,7 +23,7 @@ export const CustomModalMsg: FC<customModalMsg> = ({
               style={styles.btnAction}
               onPress={handleOkStep}
             >
-              <Text style={styles.txtBtnAction}>{"Accept"}</Text>
+              <Text style={styles.txtBtnAction}>{"Ok!"}</Text>
             </TouchableOpacity>
           </View>
         </View>

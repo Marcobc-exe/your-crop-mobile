@@ -7,6 +7,7 @@ import { CustomModalMsg } from "./CustomModalMsg";
 import { RegisterMapLocation } from "./RegisterMapLocation";
 import { useAppDispatch } from "../../store";
 import {
+  addNewMap,
   handleMapName,
   switchEditionMap,
 } from "../../store/slices/mapSlice/mapSlice";
@@ -18,6 +19,7 @@ import {
   switchEditionUnit,
 } from "../../store/slices/unitSlice/unitSlice";
 import { RegisterUnitLocation } from "./RegisterUnitLocation";
+import { SectorModalInput } from "./SectorModalInput";
 
 type modalsTepperProps = {
   handleMapUIHeight: (height: number) => void;
@@ -63,6 +65,7 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
     setHandleMapLocation(false);
     setShowUnitModal(true);
     dispatch(switchEditionMap());
+    dispatch(addNewMap())
   };
 
   // * REGISTER UNIT
@@ -86,6 +89,11 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
     setShowSectorModal(true);
   };
 
+  // * REGISTER SECTOR
+  const handleRegisterSector = () => {
+    setShowSectorModal(false)
+  }
+
   return (
     <>
       <HeaderCreationMap show={handleMapLocation} />
@@ -99,7 +107,7 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
 
       <CustomModalMsg
         show={showOkStep}
-        text={"Tap on the map to set the middle point of your map."}
+        text={"Touch on map where will be your map."}
         handleOkStep={handleOkStep}
       />
 
@@ -117,13 +125,21 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
 
       <CustomModalMsg
         show={showOkStepUnit}
-        text={"Tap on the map to set the unit."}
+        text={"Touch on map where will be your unit."}
         handleOkStep={handleOkStepUnit}
       />
 
       {handleUnitLocation && (
         <RegisterUnitLocation registerUnit={handleRegisterUniLocation} />
       )}
+
+      <SectorModalInput
+        show={showSectorModal}
+        control={control}
+        reset={reset}
+        handleSubmit={handleSubmit}
+        handleRegisterSector={handleRegisterSector}
+      />
     </>
   );
 };
