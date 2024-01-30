@@ -20,6 +20,8 @@ import {
 } from "../../store/slices/unitSlice/unitSlice";
 import { RegisterUnitLocation } from "./RegisterUnitLocation";
 import { SectorModalInput } from "./SectorModalInput";
+import { handleSectorProps, switchEditionSector } from "../../store/slices/sectorSlice/sectorSlice";
+import { ControllPanel } from "../MapUI/ControllPanel";
 
 type modalsTepperProps = {
   handleMapUIHeight: (height: number) => void;
@@ -28,12 +30,20 @@ type modalsTepperProps = {
 export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
   const dispatch = useAppDispatch();
   const { control, handleSubmit, reset, getValues } = useForm({
-    defaultValues: { inputMapName: "", inputUnitName: "", inputUnitId: null },
+    defaultValues: {
+      inputMapName: "",
+      inputUnitName: "",
+      inputUnitId: null,
+      inputSectorName: "",
+      inputSectorId: "",
+    },
   });
 
   const [showMapModal, setShowMapModal]: useStateProp<boolean> = useState(true);
   const [showOkStep, setShowOkStep]: useStateProp<boolean> = useState(false);
   const [showOkStepUnit, setShowOkStepUnit]: useStateProp<boolean> =
+    useState(false);
+  const [showOkStepSector, setShowOkStepSector]: useStateProp<boolean> =
     useState(false);
   const [handleMapLocation, setHandleMapLocation]: useStateProp<boolean> =
     useState(false);
@@ -65,7 +75,7 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
     setHandleMapLocation(false);
     setShowUnitModal(true);
     dispatch(switchEditionMap());
-    dispatch(addNewMap())
+    dispatch(addNewMap());
   };
 
   // * REGISTER UNIT
@@ -87,12 +97,23 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
   const handleRegisterUniLocation = () => {
     setHandleUnitLocation(false);
     setShowSectorModal(true);
+    dispatch(switchEditionUnit());
   };
 
   // * REGISTER SECTOR
   const handleRegisterSector = () => {
-    setShowSectorModal(false)
-  }
+    const sectorID = getValues().inputSectorId;
+    const sectorName = getValues().inputSectorName;
+
+    dispatch(handleSectorProps({ sectorID, sectorName }));
+    setShowSectorModal(false);
+    setShowOkStepSector(true);
+  };
+
+  const handleOkStepSector = () => {
+    setShowOkStepSector(false);
+    dispatch(switchEditionSector());
+  };
 
   return (
     <>
@@ -140,6 +161,14 @@ export const ModalsStepper: FC<modalsTepperProps> = ({ handleMapUIHeight }) => {
         handleSubmit={handleSubmit}
         handleRegisterSector={handleRegisterSector}
       />
+
+      <CustomModalMsg
+        show={showOkStepSector}
+        text={"Start to draw the first polygon on map."}
+        handleOkStep={handleOkStepSector}
+      />
+
+      <ControllPanel />
     </>
   );
 };

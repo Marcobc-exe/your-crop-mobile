@@ -25,7 +25,7 @@ export const SectorModalInput: FC<sectorModalInputProps> = ({
     <Modal visible={show} animationType="slide" transparent={true}>
       <View style={styles.containerMainModal}>
         <View style={styles.containerModal}>
-          <Text style={styles.title}>Enter {text} unit details</Text>
+          <Text style={styles.title}>Enter {text}sector details</Text>
 
           <ControllerTextInput
             name={"inputSectorName"}
@@ -38,10 +38,10 @@ export const SectorModalInput: FC<sectorModalInputProps> = ({
               },
             }}
             styles={styleInput}
-            placeholder={"Enter unit name"}
+            placeholder={"Enter sector name"}
           />
           <ControllerTextInput
-            name={"inputUnitId"}
+            name={"inputSectorId"}
             control={control}
             rules={{
               required: "Required",

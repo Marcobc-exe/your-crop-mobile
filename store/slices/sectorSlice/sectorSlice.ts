@@ -8,7 +8,7 @@ type coordinates = {
 type initialStateProps = {
   sectorName: string | null;
   sectorID: number | null;
-  sectorCoordinates: coordinates[];
+  polygonCoords: coordinates[];
   enableGetSectorCoordinates: boolean;
   state?: number | null;
   deviceId?: number | null;
@@ -22,7 +22,7 @@ type initialStateProps = {
 const initialState: initialStateProps = {
   sectorName: null,
   sectorID: null,
-  sectorCoordinates: [],
+  polygonCoords: [],
   enableGetSectorCoordinates: false,
   state: null,
   deviceId: null,
@@ -30,7 +30,7 @@ const initialState: initialStateProps = {
   area: null,
   crop: null,
   pumps: [1],
-  listSectors: []
+  listSectors: [],
 };
 
 export const sectorSlice = createSlice({
@@ -50,7 +50,7 @@ export const sectorSlice = createSlice({
         area: state.area,
         crop: state.crop,
         pump: state.pumps,
-      })
+      });
     },
     handleSectorProps: (state, action) => {
       const sectorName = action.payload.sectorName;
@@ -59,9 +59,38 @@ export const sectorSlice = createSlice({
       state.sectorName = sectorName;
       state.sectorID = sectorID;
     },
+    onPressDrawPolygon: (state, action) => {
+
+      state.polygonCoords.push(action.payload);
+    },
+    onPressUndoPolygon: (state) => {
+      const polygonCoords = state.polygonCoords;
+      if (polygonCoords.length === 0) return;
+
+      state.polygonCoords = polygonCoords.slice(0, -1);
+    },
+    onPressRemovePolygon: (state) => {
+      const polygonCoords = state.polygonCoords;
+      if (polygonCoords.length === 0) return;
+      
+      state.polygonCoords = [];
+    },
+    onPressConfirmdPolygon: (state) => {
+      const polygonCoords = state.polygonCoords;
+      if (polygonCoords.length < 3) return;
+
+      state.enableGetSectorCoordinates = false;
+    }
   },
 });
 
-export const { switchEditionSector, handleSectorList, handleSectorProps } =
-  sectorSlice.actions;
+export const {
+  switchEditionSector,
+  handleSectorList,
+  handleSectorProps,
+  onPressDrawPolygon,
+  onPressUndoPolygon,
+  onPressRemovePolygon,
+  onPressConfirmdPolygon,
+} = sectorSlice.actions;
 export default sectorSlice.reducer;
